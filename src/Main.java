@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Main {
@@ -18,7 +20,8 @@ public class Main {
         try {
             enterData();
 
-            URL url = new URL(strUrl);
+            String valUrl = getUrlForRequest(strUrl);
+            URL url = new URL(valUrl);
             HttpURLConnection con = getHttpURLConnection(url);
 
             String location = con.getHeaderField("Location");
@@ -50,7 +53,7 @@ public class Main {
     }
 
     private static void enterData() throws IOException {
-        System.out.println("Please enter URL for testing. Format URL: 'https://your_site.ru/wp-login.php'");
+        System.out.println("Please enter URL for testing");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         strUrl = reader.readLine();
 
@@ -63,5 +66,19 @@ public class Main {
 
     private static boolean checkAccess(String location) {
         return location.contains("wp-admin");
+    }
+
+    private  static String validateUrl(String url) {
+        String match = "";
+        Pattern pattern = Pattern.compile("[A-z0-9\\-\\.]+\\.(ru|com)");
+        Matcher matcher = pattern.matcher(url);
+        while (matcher.find()) {
+            match = matcher.group();
+        }
+        return match;
+    }
+
+    private static String getUrlForRequest (String url){
+        return String.format("https://%s/wp-login.php", validateUrl(url));
     }
 }
