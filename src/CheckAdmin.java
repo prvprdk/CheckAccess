@@ -8,14 +8,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class Main {
+public class CheckAdmin {
 
     private static String strUrl;
     private static String username;
     private static String password;
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)   {
 
         try {
             enterData();
@@ -25,7 +25,8 @@ public class Main {
             HttpURLConnection con = getHttpURLConnection(url);
 
             String location = con.getHeaderField("Location");
-            System.out.println(checkAccess(location));
+            checkAccess(location);
+
             con.disconnect();
 
 
@@ -64,11 +65,12 @@ public class Main {
         password = reader.readLine();
     }
 
-    private static boolean checkAccess(String location) {
-        return location.contains("wp-admin");
+    private static void checkAccess(String location) {
+        boolean check = location.contains("wp-admin");
+        System.out.print(check);
     }
 
-    private  static String validateUrl(String url) {
+    private static String validateUrl(String url) {
         String match = "";
         Pattern pattern = Pattern.compile("[A-z0-9\\-\\.]+\\.(ru|com)");
         Matcher matcher = pattern.matcher(url);
@@ -78,7 +80,7 @@ public class Main {
         return match;
     }
 
-    private static String getUrlForRequest (String url){
-        return String.format("https://%s/wp-login.php", validateUrl(url));
+    private static String getUrlForRequest(String url) {
+        return String.format("https://%s/wp-admin", validateUrl(url));
     }
 }
