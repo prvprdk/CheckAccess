@@ -24,9 +24,7 @@ public class CheckAdmin {
             URL url = new URL(valUrl);
             HttpURLConnection con = getHttpURLConnection(url);
 
-            String location = con.getHeaderField("Location");
-            checkAccess(location);
-
+            checkAccess(con);
             con.disconnect();
 
 
@@ -65,7 +63,8 @@ public class CheckAdmin {
         password = reader.readLine();
     }
 
-    private static void checkAccess(String location) {
+    private static void checkAccess(HttpURLConnection con) {
+        String location = con.getHeaderField("Location");
         boolean check = location.contains("wp-admin");
         System.out.print(check);
     }
